@@ -3,7 +3,8 @@
 Copy to destination
 
 ```bash
-cp -r ../traefik /opt
+cp -r ./traefik /opt
+cd /opt/traefik
 ```
 
 ### Generate certificates
@@ -23,3 +24,5 @@ cp -r ../traefik /opt
 ```bash
 mv .env.example .env
 ```
+
+Set your values
