@@ -1,0 +1,33 @@
+---
+services:
+  traefik:
+    image: traefik:${TRAEFIK_TAG}
+    container_name: traefik
+    restart: unless-stopped
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./traefik.yml:/etc/traefik/traefik.yml:ro"
+      - "./dynamic:/etc/traefik/dynamic:ro"
+      - "./certresolver:/certresolver"
+      - "./certs:/certs:ro"
+    environment:
+      CLOUDFLARE_EMAIL: ${CLOUDFLARE_EMAIL}
+      CLOUDFLARE_DNS_API_TOKEN: ${CLOUDFLARE_DNS_API_TOKEN}
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.entrypoints=websecure"
+      - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt-cf"
+      - "traefik.http.routers.dashboard.rule=Host(`$TRAEFIK_HOSTNAME`)"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.middlewares=auth-dashboard"
+      - "traefik.http.middlewares.auth-dashboard.basicauth.users=${DASHBOARD_USER}:${DASHBOARD_HASH}"
+
+networks:
+  proxy_net:
+    driver: bridge
+    name: proxy

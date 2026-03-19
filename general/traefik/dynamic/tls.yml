@@ -1,0 +1,13 @@
+---
+tls:
+  certificates:
+    - certFile: /certs/default-wildcard.cert.pem
+      keyFile: /certs/default-wildcard.key.pem
+      stores:
+        - default
+
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /certs/default-wildcard.cert.pem
+        keyFile: /certs/default-wildcard.key.pem
